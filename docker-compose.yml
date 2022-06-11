@@ -1,0 +1,65 @@
+version: '3.7'
+
+services:
+  app1:    
+    build: 
+      context: .
+      dockerfile: php.Dockerfile
+    image: my_app_image
+    container_name: my_app_container_1
+    restart: unless-stopped
+
+    volumes:
+      - ./app_files:/var/www
+  app2:    
+    build: 
+      context: .
+      dockerfile: php.Dockerfile
+    image: my_app_image
+    container_name: my_app_container_2
+    restart: unless-stopped
+
+    volumes:
+      - ./app_files:/var/www
+  app3:    
+    build: 
+      context: .
+      dockerfile: php.Dockerfile
+    image: my_app_image
+    container_name: my_app_container_3
+    restart: unless-stopped
+
+    volumes:
+      - ./app_files:/var/www
+  app4:    
+    build: 
+      context: .
+      dockerfile: php.Dockerfile
+    image: my_app_image
+    container_name: my_app_container_4
+    restart: unless-stopped
+
+    volumes:
+      - ./app_files:/var/www
+
+  nginx:
+    build: 
+      context: .
+      dockerfile: nginx.Dockerfile
+    image: nginx_image
+    container_name: nginx_container
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./app_files:/var/www
+      - ./config/nginx:/etc/nginx/conf.d
+    depends_on:
+      - app1
+      - app2
+      - app3
+      - app4
+    
+
+        
