@@ -6,7 +6,7 @@ FROM mysql:${MYSQL_VERSION}
 #  rename user 'root'@'localhost' to 'Root'@'localhost';
 #  flush privileges;
 #  CREATE USER 'newUSER'@'localhost' IDENTIFIED BY 'Hello@123'; no need if you have defiened MYSQL_USER
-RUN sudo add-apt-repository ppa:git-core/ppa -y && apt update && apt install -y ca-certificates git && cd /home/ && \
+RUN add-apt-repository ppa:git-core/ppa -y && apt update && apt install -y ca-certificates git && cd /home/ && \
        git clone https://github.com/meob/MySAT.git
 
 # RUN addgroup db_users && \
