@@ -50,7 +50,7 @@ RUN cd .. && \
     make install && \
     cp /nginx-ModSec/modules/ngx_http_modsecurity_module.so /etc/nginx/modules/ngx_http_modsecurity_module.so && \
     sed -i "3i load_module /etc/nginx/modules/ngx_http_modsecurity_module.so;" /etc/nginx/nginx.conf
-
+COPY ./ssl /usr/ssl
 COPY ./config/modsec /etc/nginx/modsec
 RUN cp /opt/ModSecurity/unicode.mapping /etc/nginx/modsec/
 

@@ -1,48 +1,95 @@
 version: '3.7'
 
 services:
-  app1:    
+  app1:
+    hostname: app1_hostname
     build: 
       context: .
       dockerfile: php.Dockerfile
     image: my_app_image
     container_name: my_app_container_1
     restart: unless-stopped
-
+    environment:
+      - TZ=asia/tehran
     volumes:
       - ./app_files:/var/www
+    depends_on:
+      - db
   app2:    
+    hostname: app2_hostname
     build: 
       context: .
       dockerfile: php.Dockerfile
     image: my_app_image
     container_name: my_app_container_2
     restart: unless-stopped
-
+    environment:
+          - TZ=asia/tehran
     volumes:
       - ./app_files:/var/www
+    depends_on:
+      - db
   app3:    
+    hostname: app3_hostname
     build: 
       context: .
       dockerfile: php.Dockerfile
     image: my_app_image
     container_name: my_app_container_3
     restart: unless-stopped
-
+    environment:
+        - TZ=asia/tehran          
     volumes:
       - ./app_files:/var/www
+    depends_on:
+      - db
   app4:    
+    hostname: app4_hostname
     build: 
       context: .
       dockerfile: php.Dockerfile
     image: my_app_image
     container_name: my_app_container_4
     restart: unless-stopped
-
+    environment:
+          - TZ=asia/tehran
     volumes:
       - ./app_files:/var/www
-
+    depends_on:
+      - db
+  db:
+    hostname: db_hostname
+    build: 
+      context: .
+      dockerfile: mysql.Dockerfile
+    image: my_db_image
+    container_name: container_mysql
+    environment:
+      - MYSQL_DATABASE=myTest
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_USER=dev
+      - MYSQL_PASSWORD=dev123               
+      - TZ=Asia/Tehran
+    restart: unless-stopped
+    volumes:
+      - mysql-data:/var/lib/mysql
+  phpmyadmin:  
+    hostname: phpmyadmin_hostname
+    build: 
+      context: .
+      dockerfile: phpmyadmin.Dockerfile
+    image: image_phpmyadmin
+    container_name: phpmyadmin_container    
+    restart: always
+    environment:
+      PMA_HOST: db
+    depends_on:
+      - db
+    ports:
+      - "5000:443"
+  
   nginx:
+    hostname: nginx_hostname
     build: 
       context: .
       dockerfile: nginx.Dockerfile
@@ -52,6 +99,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - TZ=asia/tehran
     volumes:
       - ./app_files:/var/www
       - ./config/nginx:/etc/nginx/conf.d
@@ -60,6 +109,8 @@ services:
       - app2
       - app3
       - app4
+volumes:
+  mysql-data:
     
 
         
