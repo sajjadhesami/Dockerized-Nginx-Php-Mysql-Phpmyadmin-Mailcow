@@ -72,7 +72,8 @@ services:
       - TZ=Asia/Tehran
     restart: unless-stopped
     volumes:
-      - mysql-data:/var/lib/mysql
+      - ./data/backups:/var/backups
+      # - ./data/mysql:/var/lib/mysql
   phpmyadmin:  
     hostname: phpmyadmin_hostname
     build: 
@@ -109,8 +110,26 @@ services:
       - app2
       - app3
       - app4
-volumes:
-  mysql-data:
+  postfixadmin:
+    hostname: postfix_hostname
+    build: 
+      context: .
+      dockerfile: postfix.Dockerfile
+    depends_on:
+      - db
+    image: postfixadmin_image
+    container_name: container_postfix
+    ports:
+      - 8000:80
+    restart: unless-stopped
+    environment:
+      POSTFIXADMIN_DB_TYPE: mysqli
+      POSTFIXADMIN_DB_HOST: db
+      POSTFIXADMIN_DB_NAME: postfixadmin
+      POSTFIXADMIN_DB_USER: root # Change in the future
+      POSTFIXADMIN_DB_PASSWORD: root123 # Change in the future
+# volumes:
+#   mysql-data:
     
 
         

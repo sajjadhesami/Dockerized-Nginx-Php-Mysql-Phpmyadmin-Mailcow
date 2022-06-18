@@ -6,8 +6,14 @@ FROM mysql:${MYSQL_VERSION}
 #  rename user 'root'@'localhost' to 'Root'@'localhost';
 #  flush privileges;
 #  CREATE USER 'newUSER'@'localhost' IDENTIFIED BY 'Hello@123'; no need if you have defiened MYSQL_USER
-RUN apt update && apt install -y ca-certificates git && cd /home/ && \
+RUN apt update && apt install -y vim ca-certificates git zip unzip cron && cd /home/ && \
        git clone https://github.com/meob/MySAT.git
+
+COPY ./config/db/backup.sh /home/backup.sh
+
+
+# crontab -e
+# 0,5,10,15,20,25,30,35,40,45,50,55 * * * * /home/backup.sh
 
 # RUN addgroup db_users && \
 #     adduser db_user && \
