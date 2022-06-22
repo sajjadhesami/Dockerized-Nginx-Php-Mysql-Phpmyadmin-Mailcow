@@ -15,6 +15,7 @@ services:
       - ./app_files:/var/www
     depends_on:
       - db
+      - nginx
   app2:    
     hostname: app2_hostname
     build: 
@@ -29,6 +30,7 @@ services:
       - ./app_files:/var/www
     depends_on:
       - db
+      - nginx
   app3:    
     hostname: app3_hostname
     build: 
@@ -43,6 +45,7 @@ services:
       - ./app_files:/var/www
     depends_on:
       - db
+      - nginx
   app4:    
     hostname: app4_hostname
     build: 
@@ -57,6 +60,7 @@ services:
       - ./app_files:/var/www
     depends_on:
       - db
+      - nginx
   db:
     hostname: db_hostname
     build: 
@@ -85,6 +89,9 @@ services:
     environment:
       PMA_HOST: db
       PMA_ABSOLUTE_URI: https://localhost/phpmyadmin/
+      MEMORY_LIMIT: 512M
+      UPLOAD_LIMIT: 512M
+      MAX_EXECUTION_TIME: 0
     depends_on:
       - db
       - nginx
@@ -107,11 +114,6 @@ services:
     volumes:
       - ./app_files:/var/www
       - ./config/nginx:/etc/nginx/conf.d
-    depends_on:
-      - app1
-      - app2
-      - app3
-      - app4
   # postfixadmin:
   #   hostname: postfix_hostname
   #   build: 

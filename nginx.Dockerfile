@@ -54,7 +54,7 @@ RUN cd .. && \
     sed -i "3i load_module /etc/nginx/modules/ngx_http_modsecurity_module.so;" /etc/nginx/nginx.conf
 COPY ./ssl /usr/ssl
 COPY ./config/modsec /etc/nginx/modsec
-RUN cp /opt/ModSecurity/unicode.mapping /etc/nginx/modsec/
+RUN cp /opt/ModSecurity/unicode.mapping /etc/nginx/modsec/ && rm /var/log/nginx/*
 
 COPY ./config/nginx/app.conf /etc/nginx/conf.d/app.conf
 COPY ./app_files/ /var/www
