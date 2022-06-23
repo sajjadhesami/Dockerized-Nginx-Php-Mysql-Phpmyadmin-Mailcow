@@ -89,7 +89,7 @@ services:
     environment:
       PMA_HOST: db
       PMA_ABSOLUTE_URI: https://localhost/phpmyadmin/
-      MEMORY_LIMIT: 512M
+      MEMORY_LIMIT: -1
       UPLOAD_LIMIT: 512M
       MAX_EXECUTION_TIME: 0
     depends_on:
@@ -134,6 +134,7 @@ services:
   #     POSTFIXADMIN_DB_PASSWORD: root123 # Create a database user (Change in the future)
 volumes:
    mysql-data:
+    name: mysql-data
     
 
         

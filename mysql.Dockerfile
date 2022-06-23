@@ -20,7 +20,11 @@ ADD ./config/db/root /etc/cron.d/root-cron
 
 RUN crontab /etc/cron.d/root-cron
 
-CMD cron && mysqld --user=mysql
+
+
+# (START) uncomment if you want to take backups
+CMD mysqld --user=mysql && cron
+# (END) uncomment if you want to take backups
 
 # GRANT ALL PRIVILEGES ON myTest. * TO 'dev'@'%';
 
