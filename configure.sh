@@ -46,7 +46,8 @@ sudo apt-get update
     gnupg \
     lsb-release \
     sed \
-    perl
+    perl \
+    docker-compose
 
 echo -e "\033[1;36m * Installing git \033[0m"
 apt install git 
@@ -73,7 +74,7 @@ apt install ca-certificates \
 if [ -d ./app_files ]
 then
     echo -e "\033[1;36m * app_files directory exists \033[0m"
-    echo -ne "\033[0;31m \t Would you like to remove the ./app_files directory? (y/n) YOU WILL LOSE THE DATA THAT YOU HAVE IN IT! " 
+    echo -ne "\033[0;31m \t Would you like to remove the ./app_files directory? (y/n) YOU WILL LOSE THE DATA THAT YOU HAVE IN IT! \033[0m" 
     read RES
     if [ "$RES" == "y" ]
     then
@@ -96,7 +97,7 @@ fi
 if [ -d ./mailcow ]
 then
     echo -e "\033[1;36m * mailcow directory exists \033[0m"
-    echo -ne "\033[0;31m \t Would you like to remove the ./mailcow directory? (y/n) YOU WILL LOSE THE DATA THAT YOU HAVE IN IT! " 
+    echo -ne "\033[0;31m \t Would you like to remove the ./mailcow directory? (y/n) YOU WILL LOSE THE DATA THAT YOU HAVE IN IT! \033[0m" 
     read RES
     if [ "$RES" == "y" ]
     then
