@@ -138,7 +138,9 @@ sed -i -r "${LINE_NO} s/^/#/" ./docker-compose.yml
 sed -i -r 's/(.*)? - ("\$\{HTTPS.*)/\1# - \2/' ./docker-compose.yml
 sed -i -r 's/(.*)? - ("\$\{HTTP.*)/\1# - \2/' ./docker-compose.yml
 
-docker compose down -v
+echo -e "\033[1;36m * restarting mailcow \033[0m"
+# add -v if you want to remove the database
+docker compose down
 docker compose up -d
 
 cd ..
@@ -147,7 +149,7 @@ echo -e "\033[1;36m * Configuring .env file \033[0m"
 
 if [ -f "./.env" ]
 then
-    echo -ne "\033[0;31m \t A .env file already exists. Do you want to delete it? (y/n) if you do not remove the .env file it will be used for the configuration of docker-compose.yml \033[0;31m"
+    echo -ne "\033[0;31m \t A .env file already exists. Do you want to delete it? (y/n) if you do not remove the .env file it will be used for the configuration of docker-compose.yml \033[0m"
     read RES
     if [ "$RES" == "y" ]
     then
@@ -179,13 +181,21 @@ perl -0pi -e "s#upstream *backend *\{(.|\n|\r)*?\}#$str#gs" ./config/nginx/app.c
 
 echo -e "\033[1;36m * Preparing mysql \033[0m"
 
-rootPass=$(sed -nr '/ROOT_PASS=(\d*)/p' ./.env | cut -d '=' -f 2)
+ROOT_PASS=$(sed -nr '/ROOT_PASS=(\d*)/p' ./.env | cut -d '=' -f 2)
+USER_NAME=$(sed -nr '/USER_NAME=(\d*)/p' ./.env | cut -d '=' -f 2)
+USER_PASS=$(sed -nr '/USER_PASS=(\d*)/p' ./.env | cut -d '=' -f 2)
+DB_NAME=$(sed -nr '/DB_NAME=(\d*)/p' ./.env | cut -d '=' -f 2)
 
 docker run --rm \
   --name init-mysql \
   -v mysql-data:/var/lib/mysql \
-  -e MYSQL_ROOT_PASSWORD="$rootPass" \
+  -e MYSQL_ROOT_PASSWORD="${ROOT_PASS}" \
+  -e MYSQL_USER="${USER_NAME}" \
+  -e MYSQL_PASSWORD="${USER_PASS}" \
+  -e MYSQL_DATABASE="${DB_NAME}" \
   -d mysql:latest && docker stop init-mysql
+
+echo -e "\033[1;36m * rebuilding and starting containers \033[0m"
 
 docker compose down
 docker compose build
