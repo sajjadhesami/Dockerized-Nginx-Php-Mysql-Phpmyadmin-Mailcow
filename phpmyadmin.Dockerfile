@@ -1,6 +1,6 @@
 FROM phpmyadmin:latest
 
-RUN apt update -o Acquire::Check-Valid-Until=false && apt install -y vim nano net-tools
+RUN apt update -o Acquire::Check-Valid-Until=false && apt install -y vim nano net-tools tzdata
 
 RUN a2enmod ssl
 COPY ./ssl /usr/ssl

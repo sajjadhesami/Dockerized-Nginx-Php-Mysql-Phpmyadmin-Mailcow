@@ -1,8 +1,8 @@
 ARG NGINX_VER=1.22.0
 FROM nginx:${NGINX_VER}-alpine
 
-RUN apk update && apk upgrade && \
-    apk add vim lynx openssl apache2-utils curl
+RUN apk update && \
+    apk add --no-cache vim lynx openssl apache2-utils curl tzdata
 
 RUN apk add --no-cache --virtual general-dependencies \
     autoconf \
@@ -38,8 +38,7 @@ RUN cd /opt && \
     ./configure --prefix=/ModSec && \
     make && \
     make install 
-    # export MODSECURITY_INC=/ModSec/include && \
-    # export MODSECURITY_LIB=/ModSec/lib 
+    
 ENV MODSECURITY_INC=/ModSec/include                                                                                                        
 ENV MODSECURITY_LIB=/ModSec/lib                                                                                                        
 
@@ -58,8 +57,3 @@ RUN cp /opt/ModSecurity/unicode.mapping /etc/nginx/modsec/ && rm /var/log/nginx/
 
 COPY ./config/nginx/app.conf /etc/nginx/conf.d/app.conf
 COPY ./app_files/ /var/www
-
-# mail cow
-
-# mail cow
-

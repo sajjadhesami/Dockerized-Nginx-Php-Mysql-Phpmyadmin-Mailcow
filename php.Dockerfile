@@ -3,7 +3,7 @@ FROM php:7.4.7-fpm-alpine
 WORKDIR /var/www
 
 RUN apk update && \
-    apk add build-base vim lynx
+    apk add --no-cache build-base vim lynx tzdata
 
 RUN docker-php-ext-install mysqli pdo_mysql
 
