@@ -155,7 +155,8 @@ then
     then
         rm ./.env
         configENV
-
+    else
+        mv ./.env ./.env
     fi 
 else
     configENV
@@ -165,7 +166,7 @@ echo -e "\033[1;36m * Preparing nginx config file \033[0m"
 
 currentdir="$( basename "$PWD" )"
 currentdir=${currentdir@L}
-str="upstream backend {\n"
+str="upstream backend {\n     ip_hash;"
 
 n=$(sed -nr '/SCALE=(\d*)/p' ./.env | cut -d '=' -f 2)
 
