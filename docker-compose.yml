@@ -1,61 +1,16 @@
 version: '3.7'
 
 services:
-  app1:
-    hostname: app1_hostname
+  app:
+    deploy:
+      replicas: ${SCALE}
     build: 
       context: .
       dockerfile: php.Dockerfile
-    image: my_app_image
-    container_name: my_app_container_1
+    image: my_app_image  
     restart: unless-stopped
     environment:
-      - TZ=asia/tehran
-    volumes:
-      - ./app_files:/var/www
-    depends_on:
-      - db
-      - nginx
-  app2:    
-    hostname: app2_hostname
-    build: 
-      context: .
-      dockerfile: php.Dockerfile
-    image: my_app_image
-    container_name: my_app_container_2
-    restart: unless-stopped
-    environment:
-          - TZ=asia/tehran
-    volumes:
-      - ./app_files:/var/www
-    depends_on:
-      - db
-      - nginx
-  app3:    
-    hostname: app3_hostname
-    build: 
-      context: .
-      dockerfile: php.Dockerfile
-    image: my_app_image
-    container_name: my_app_container_3
-    restart: unless-stopped
-    environment:
-        - TZ=asia/tehran          
-    volumes:
-      - ./app_files:/var/www
-    depends_on:
-      - db
-      - nginx
-  app4:    
-    hostname: app4_hostname
-    build: 
-      context: .
-      dockerfile: php.Dockerfile
-    image: my_app_image
-    container_name: my_app_container_4
-    restart: unless-stopped
-    environment:
-          - TZ=asia/tehran
+      - TZ=${TZ_V}
     volumes:
       - ./app_files:/var/www
     depends_on:
@@ -69,11 +24,11 @@ services:
     image: my_db_image
     container_name: container_mysql
     environment:
-      - MYSQL_DATABASE=myTest
-      - MYSQL_ROOT_PASSWORD=root123
-      - MYSQL_USER=dev
-      - MYSQL_PASSWORD=dev123
-      - TZ=Asia/Tehran
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${ROOT_PASS}
+      - MYSQL_USER=${USER_NAME}
+      - MYSQL_PASSWORD=${USER_PASS}
+      - TZ=${TZ_V}
     restart: unless-stopped
     volumes:
       - ./data/backups:/var/backups
@@ -88,16 +43,13 @@ services:
     restart: always
     environment:
       PMA_HOST: db
-      PMA_ABSOLUTE_URI: https://localhost/phpmyadmin/
+      PMA_ABSOLUTE_URI: https://localhost/phpmyadmin
       MEMORY_LIMIT: -1
       UPLOAD_LIMIT: 512M
       MAX_EXECUTION_TIME: 0
     depends_on:
       - db
-      - nginx
-    # ports:
-    #    - "5000:443"
-  
+      - nginx  
   nginx:
     hostname: nginx_hostname
     build: 
@@ -110,28 +62,10 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      - TZ=asia/tehran
+      - TZ=${TZ_V}
     volumes:
       - ./app_files:/var/www
       - ./config/nginx:/etc/nginx/conf.d
-  # postfixadmin:
-  #   hostname: postfix_hostname
-  #   build: 
-  #     context: .
-  #     dockerfile: postfix.Dockerfile
-  #   depends_on:
-  #     - db
-  #   image: postfixadmin_image
-  #   container_name: container_postfix
-  #   ports:
-  #     - 8000:80
-  #   restart: unless-stopped
-  #   environment:
-  #     POSTFIXADMIN_DB_TYPE: mysqli
-  #     POSTFIXADMIN_DB_HOST: db
-  #     POSTFIXADMIN_DB_NAME: postfixadmin
-  #     POSTFIXADMIN_DB_USER: root # Create a database user (Change in the future)
-  #     POSTFIXADMIN_DB_PASSWORD: root123 # Create a database user (Change in the future)
 volumes:
    mysql-data:
     name: mysql-data

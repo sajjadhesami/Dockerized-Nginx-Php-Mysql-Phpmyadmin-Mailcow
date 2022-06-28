@@ -23,6 +23,7 @@ RUN crontab /etc/cron.d/root-cron
 
 
 # (START) uncomment if you want to take backups
+# https://stackoverflow.com/questions/58021378/docker-compose-doesnt-start-mysql8-correctly
 CMD mysqld --user=mysql && cron
 # (END) uncomment if you want to take backups
 
