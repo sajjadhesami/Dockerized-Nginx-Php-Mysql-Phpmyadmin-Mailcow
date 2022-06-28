@@ -3,27 +3,27 @@
 configENV () {
     echo -ne "\033[1;36m \t Enter the time zone for your containers:  \033[0m"
     read RES        
-    echo "TZ_V=${RES}" > ./.env
+    echo "TZ_V=${RES}" > .env
     
     echo -ne "\033[1;36m \t Enter the number of app replicas that you want:  \033[0m"
     read RES        
-    echo "SCALE=${RES}" >> ./.env
+    echo "SCALE=${RES}" >> .env
     
     echo -ne "\033[1;36m \t Enter the MySQL database name:  \033[0m"
     read RES        
-    echo "DB_NAME=${RES}" >> ./.env
+    echo "DB_NAME=${RES}" >> .env
     
     echo -ne "\033[1;36m \t Enter the MySQL database root password:  \033[0m"
     read RES        
-    echo "ROOT_PASS=${RES}" >> ./.env
+    echo "ROOT_PASS=${RES}" >> .env
     
     echo -ne "\033[1;36m \t Enter the MySQL database username:  \033[0m"
     read RES        
-    echo "USER_NAME=${RES}" >> ./.env
+    echo "USER_NAME=${RES}" >> .env
     
     echo -ne "\033[1;36m \t Enter the MySQL database userpassword:  \033[0m"
     read RES
-    echo "USER_PASS=${RES}" >> ./.env
+    echo "USER_PASS=${RES}" >> .env
 }
 
 clear;
@@ -147,16 +147,14 @@ cd ..
 
 echo -e "\033[1;36m * Configuring .env file \033[0m"
 
-if [ -f "./.env" ]
+if [ -f ".env" ]
 then
     echo -ne "\033[0;31m \t A .env file already exists. Do you want to delete it? (y/n) if you do not remove the .env file it will be used for the configuration of docker-compose.yml \033[0m"
     read RES
     if [ "$RES" == "y" ]
     then
-        rm ./.env
-        configENV
-    else
-        mv ./.env ./.env
+        rm .env
+        configENV    
     fi 
 else
     configENV
@@ -168,7 +166,7 @@ currentdir="$( basename "$PWD" )"
 currentdir=${currentdir@L}
 str="upstream backend {\n     ip_hash;"
 
-n=$(sed -nr '/SCALE=(\d*)/p' ./.env | cut -d '=' -f 2)
+n=$(sed -nr '/SCALE=(\d*)/p' .env | cut -d '=' -f 2)
 
 for ((i=1;i<=n;i++))
 do
@@ -182,19 +180,28 @@ perl -0pi -e "s#upstream *backend *\{(.|\n|\r)*?\}#$str#gs" ./config/nginx/app.c
 
 echo -e "\033[1;36m * Preparing mysql \033[0m"
 
-ROOT_PASS=$(sed -nr '/ROOT_PASS=(\d*)/p' ./.env | cut -d '=' -f 2)
-USER_NAME=$(sed -nr '/USER_NAME=(\d*)/p' ./.env | cut -d '=' -f 2)
-USER_PASS=$(sed -nr '/USER_PASS=(\d*)/p' ./.env | cut -d '=' -f 2)
-DB_NAME=$(sed -nr '/DB_NAME=(\d*)/p' ./.env | cut -d '=' -f 2)
+ROOT_PASS=$(sed -nr '/ROOT_PASS=(\d*)/p' .env | cut -d '=' -f 2)
+USER_NAME=$(sed -nr '/USER_NAME=(\d*)/p' .env | cut -d '=' -f 2)
+USER_PASS=$(sed -nr '/USER_PASS=(\d*)/p' .env | cut -d '=' -f 2)
+DB_NAME=$(sed -nr '/DB_NAME=(\d*)/p' .env | cut -d '=' -f 2)
+
+
+echo -e $USER_NAME
+echo -e $USER_PASS
+echo -e $DB_NAME
+docker volume ls
+
 
 docker run --rm \
   --name init-mysql \
   -v mysql-data:/var/lib/mysql \
-  -e MYSQL_ROOT_PASSWORD="${ROOT_PASS}" \
-  -e MYSQL_USER="${USER_NAME}" \
-  -e MYSQL_PASSWORD="${USER_PASS}" \
-  -e MYSQL_DATABASE="${DB_NAME}" \
+  -e MYSQL_ROOT_PASSWORD=$(echo -e $ROOT_PASS) \
+  -e MYSQL_USER=$(echo $USER_NAME) \
+  -e MYSQL_PASSWORD=$(echo $USER_PASS) \
+  -e MYSQL_DATABASE=$(echo $DB_NAME) \
   -d mysql:latest && docker stop init-mysql
+
+docker volume ls
 
 echo -e "\033[1;36m * rebuilding and starting containers \033[0m"
 
