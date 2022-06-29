@@ -185,20 +185,15 @@ USER_NAME=$(sed -nr '/USER_NAME=(\d*)/p' .env | cut -d '=' -f 2)
 USER_PASS=$(sed -nr '/USER_PASS=(\d*)/p' .env | cut -d '=' -f 2)
 DB_NAME=$(sed -nr '/DB_NAME=(\d*)/p' .env | cut -d '=' -f 2)
 
-
-echo -e $USER_NAME
-echo -e $USER_PASS
-echo -e $DB_NAME
 docker volume ls
-
 
 docker run --rm \
   --name init-mysql \
   -v mysql-data:/var/lib/mysql \
-  -e MYSQL_ROOT_PASSWORD=$(echo -e $ROOT_PASS) \
-  -e MYSQL_USER=$(echo $USER_NAME) \
-  -e MYSQL_PASSWORD=$(echo $USER_PASS) \
-  -e MYSQL_DATABASE=$(echo $DB_NAME) \
+  -e MYSQL_ROOT_PASSWORD="$ROOT_PASS" \
+  -e MYSQL_USER="$USER_NAME" \
+  -e MYSQL_PASSWORD="$USER_PASS" \
+  -e MYSQL_DATABASE="$DB_NAME" \
   -d mysql:latest && docker stop init-mysql
 
 docker volume ls
