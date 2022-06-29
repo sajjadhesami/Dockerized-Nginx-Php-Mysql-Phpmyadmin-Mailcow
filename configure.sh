@@ -198,8 +198,8 @@ sudo docker run --rm \
   docker exec init-mysql sh -c 'echo "$MYSQL_ROOT_PASSWORD"' && \
   docker exec init-mysql sh -c 'echo "$MYSQL_USER"' && \
   docker exec init-mysql sh -c 'echo "$MYSQL_PASSWORD"' && \
-  docker exec init-mysql sh -c 'echo "$MYSQL_DATABASE"' && \
-  docker stop init-mysql
+  docker exec init-mysql sh -c 'echo "$MYSQL_DATABASE"'
+  
 
 docker volume ls
 
@@ -217,3 +217,4 @@ docker network connect mailcowdockerized_mailcow-network container_mysql
 docker network connect mailcowdockerized_mailcow-network phpmyadmin_container
 docker network connect mailcowdockerized_mailcow-network nginx_container
 
+docker stop init-mysql
