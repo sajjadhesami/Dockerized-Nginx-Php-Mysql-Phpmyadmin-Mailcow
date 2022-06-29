@@ -69,6 +69,7 @@ services:
 volumes:
    mysql-data:
     name: mysql-data
+    external: true
     
 
         
