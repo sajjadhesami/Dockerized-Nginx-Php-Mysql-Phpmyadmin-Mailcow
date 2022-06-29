@@ -187,14 +187,19 @@ DB_NAME=$(sed -nr '/DB_NAME=(\d*)/p' .env | cut -d '=' -f 2)
 
 docker volume ls
 
-docker run --rm \
+sudo docker run --rm \
   --name init-mysql \
   -v mysql-data:/var/lib/mysql \
   -e MYSQL_ROOT_PASSWORD="$ROOT_PASS" \
   -e MYSQL_USER="$USER_NAME" \
   -e MYSQL_PASSWORD="$USER_PASS" \
   -e MYSQL_DATABASE="$DB_NAME" \
-  -d mysql:latest && docker stop init-mysql
+  -d mysql:latest && docker exec init-mysql sh -c 'echo "$MYSQL_USER"' && \
+  docker exec init-mysql sh -c 'echo "$MYSQL_ROOT_PASSWORD"' && \
+  docker exec init-mysql sh -c 'echo "$MYSQL_USER"' && \
+  docker exec init-mysql sh -c 'echo "$MYSQL_PASSWORD"' && \
+  docker exec init-mysql sh -c 'echo "$MYSQL_DATABASE"' && \
+  docker stop init-mysql
 
 docker volume ls
 
