@@ -7,10 +7,15 @@ RUN apk update && \
 
 RUN docker-php-ext-install mysqli pdo_mysql
 
+
+RUN echo 'pm.max_children = 15' >> /usr/local/etc/php-fpm.d/zz-docker.conf && \
+    echo 'pm.max_requests = 500' >> /usr/local/etc/php-fpm.d/zz-docker.conf
+
 RUN addgroup -g 1000 -S www && \
     adduser -u 1000 -S www -G www
 
 USER www
+
 
 COPY --chown=www:www ./app_files /var/www
 

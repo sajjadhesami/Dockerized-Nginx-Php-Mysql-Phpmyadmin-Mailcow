@@ -122,12 +122,12 @@ cd ./mailcow/
 
 echo -e "\033[1;36m * mailcow Https is set to 127.0.0.1:8443 \033[0m"
 sed -i -r 's/HTTPS_PORT=(.*)/HTTPS_PORT=8443/' ./mailcow.conf
-sed -i -r 's/HTTPS_BIND=(.*)/HTTPS_BIND=127.0.0.1/' ./mailcow.conf
+# sed -i -r 's/HTTPS_BIND=(.*)/HTTPS_BIND=127.0.0.1/' ./mailcow.conf
 
 echo -e "\033[1;36m * mailcow Http is set to 127.0.0.1:8080 \033[0m"
 
 sed -i -r 's/HTTP_PORT=(.*)/HTTP_PORT=8080/' ./mailcow.conf
-sed -i -r 's/HTTP_BIND=(.*)/HTTP_BIND=127.0.0.1/' ./mailcow.conf
+# sed -i -r 's/HTTP_BIND=(.*)/HTTP_BIND=127.0.0.1/' ./mailcow.conf
 
 
 LINE_NO=$(grep -nP '(.*)? - ("\$\{HTTPS.*)' ./docker-compose.yml | cut -d ":" -f 1)
