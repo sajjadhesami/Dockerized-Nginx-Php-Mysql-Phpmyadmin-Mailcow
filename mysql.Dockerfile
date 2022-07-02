@@ -6,32 +6,22 @@ FROM mysql:${MYSQL_VERSION}
 #  rename user 'root'@'localhost' to 'Root'@'localhost';
 #  flush privileges;
 #  CREATE USER 'newUSER'@'localhost' IDENTIFIED BY 'Hello@123'; no need if you have defiened MYSQL_USER
-RUN apt update && apt install -y vim ca-certificates git zip unzip cron && cd /home/ && \
-       git clone https://github.com/meob/MySAT.git
 
 COPY ./config/db/backup.sh /home/backup.sh
+RUN chmod 770 /home/backup.sh
+# (START) Sometimes it throws an exception because of ca-certificate
+RUN rm /etc/apt/sources.list.d/mysql.list
+# (END) Sometimes it throws an exception because of ca-certificate
 
+RUN apt update && apt install -y vim ca-certificates git zip unzip cron && cd /home/ && \
+         git clone https://github.com/meob/MySAT.git
 
-# crontab -e
-# 0,5,10,15,20,25,30,35,40,45,50,55 * * * * /home/backup.sh
+ADD ./config/db/root /etc/cron.d/root-cron
 
-# RUN addgroup db_users && \
-#     adduser db_user && \
-#     adduser db_user db_users && \
-#     chown db_user:db_users /usr && \
-#     chown db_user:db_users /var && \
-#     chown db_user:db_users /var/run/mysqld/ && \
-#     chown db_user:db_users /var/lib/mysql/ && \
-#     chmod 600 /etc/mysql/my.cnf && \
-#     chmod 777 /var/run/mysqld/ && \
-#     chmod 755 /var/lib/mysql/
+RUN crontab /etc/cron.d/root-cron
 
-# USER db_user
+CMD cron && mysqld --user=mysql
 
-# RUN mkdir -p /var/run/mysqld/ && \    
-#     mkdir -p /var/lib/mysql-files
-
-# COPY --chown=db_user:db_users ./config/db_config/my.cnf  /etc/mysql/my.cnf
-
+# GRANT ALL PRIVILEGES ON myTest. * TO 'dev'@'%';
 
 EXPOSE 3306

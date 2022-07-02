@@ -68,12 +68,12 @@ services:
       - MYSQL_DATABASE=myTest
       - MYSQL_ROOT_PASSWORD=root123
       - MYSQL_USER=dev
-      - MYSQL_PASSWORD=dev123               
+      - MYSQL_PASSWORD=dev123
       - TZ=Asia/Tehran
     restart: unless-stopped
     volumes:
       - ./data/backups:/var/backups
-      # - ./data/mysql:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
   phpmyadmin:  
     hostname: phpmyadmin_hostname
     build: 
@@ -86,8 +86,9 @@ services:
       PMA_HOST: db
     depends_on:
       - db
-    ports:
-      - "5000:443"
+      - nginx
+    # ports:
+    #    - "5000:443"
   
   nginx:
     hostname: nginx_hostname
@@ -110,26 +111,26 @@ services:
       - app2
       - app3
       - app4
-  postfixadmin:
-    hostname: postfix_hostname
-    build: 
-      context: .
-      dockerfile: postfix.Dockerfile
-    depends_on:
-      - db
-    image: postfixadmin_image
-    container_name: container_postfix
-    ports:
-      - 8000:80
-    restart: unless-stopped
-    environment:
-      POSTFIXADMIN_DB_TYPE: mysqli
-      POSTFIXADMIN_DB_HOST: db
-      POSTFIXADMIN_DB_NAME: postfixadmin
-      POSTFIXADMIN_DB_USER: root # Change in the future
-      POSTFIXADMIN_DB_PASSWORD: root123 # Change in the future
-# volumes:
-#   mysql-data:
+  # postfixadmin:
+  #   hostname: postfix_hostname
+  #   build: 
+  #     context: .
+  #     dockerfile: postfix.Dockerfile
+  #   depends_on:
+  #     - db
+  #   image: postfixadmin_image
+  #   container_name: container_postfix
+  #   ports:
+  #     - 8000:80
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTFIXADMIN_DB_TYPE: mysqli
+  #     POSTFIXADMIN_DB_HOST: db
+  #     POSTFIXADMIN_DB_NAME: postfixadmin
+  #     POSTFIXADMIN_DB_USER: root # Create a database user (Change in the future)
+  #     POSTFIXADMIN_DB_PASSWORD: root123 # Create a database user (Change in the future)
+volumes:
+   mysql-data:
     
 
         

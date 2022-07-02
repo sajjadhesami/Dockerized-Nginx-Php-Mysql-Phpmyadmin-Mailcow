@@ -1,3 +1,4 @@
+#!/bin/bash
 # Backup storage directory 
 backupfolder=/var/backups
 # Notification email address 
@@ -10,10 +11,10 @@ password=dev123
 dbName=myTest
 # Number of days to store the backup 
 keep_day=30
-sqlfile=$backupfolder/all-database-$(date +%d-%m-%Y_%H-%M-%S).sql
-zipfile=$backupfolder/all-database-$(date +%d-%m-%Y_%H-%M-%S).zip
+sqlfile=$backupfolder/$dbName-$(date +%d-%m-%Y_%H-%M-%S).sql
+zipfile=$backupfolder/$dbName-$(date +%d-%m-%Y_%H-%M-%S).zip
 # Create a backup 
-mysqldump --no-tablespaces -u $user -p$password $dbName > $sqlfile 
+mysqldump --routines -R --triggers --events -u $user -p$password $dbName > $sqlfile 
 if [ $? == 0 ]; then
   echo 'Sql dump created' 
 else

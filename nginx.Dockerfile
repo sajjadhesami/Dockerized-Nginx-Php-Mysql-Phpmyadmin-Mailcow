@@ -2,7 +2,7 @@ ARG NGINX_VER=1.22.0
 FROM nginx:${NGINX_VER}-alpine
 
 RUN apk update && apk upgrade && \
-    apk add vim lynx openssl apache2-utils
+    apk add vim lynx openssl apache2-utils curl
 
 RUN apk add --no-cache --virtual general-dependencies \
     autoconf \
@@ -25,7 +25,8 @@ RUN apk add --no-cache --virtual general-dependencies \
     openssl-dev \
     pcre-dev \
     yajl-dev \
-    zlib-dev
+    zlib-dev \
+    busybox-extras
 
 RUN cd /opt && \
     git clone --depth 1 -b v3/master --single-branch https://github.com/SpiderLabs/ModSecurity.git && \
@@ -56,3 +57,8 @@ RUN cp /opt/ModSecurity/unicode.mapping /etc/nginx/modsec/
 
 COPY ./config/nginx/app.conf /etc/nginx/conf.d/app.conf
 COPY ./app_files/ /var/www
+
+# mail cow
+
+# mail cow
+
