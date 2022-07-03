@@ -84,6 +84,7 @@ services:
     restart: always
     environment:
       PMA_HOST: db
+      PMA_ABSOLUTE_URI: https://localhost/phpmyadmin/
     depends_on:
       - db
       - nginx

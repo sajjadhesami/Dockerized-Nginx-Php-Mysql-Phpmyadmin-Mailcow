@@ -26,7 +26,8 @@ RUN apk add --no-cache --virtual general-dependencies \
     pcre-dev \
     yajl-dev \
     zlib-dev \
-    busybox-extras
+    busybox-extras \
+    bash
 
 RUN cd /opt && \
     git clone --depth 1 -b v3/master --single-branch https://github.com/SpiderLabs/ModSecurity.git && \
