@@ -30,6 +30,8 @@ services:
       - MYSQL_PASSWORD=${USER_PASS}
       - TZ=${TZ_V}
     restart: unless-stopped
+    cap_add:
+      - SYS_NICE
     volumes:
       - ./data/backups:/var/backups
       - mysql-data:/var/lib/mysql
