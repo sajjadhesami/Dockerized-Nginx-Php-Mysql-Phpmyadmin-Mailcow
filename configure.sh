@@ -185,7 +185,11 @@ USER_NAME=$(sed -nr '/USER_NAME=(\d*)/p' .env | cut -d '=' -f 2)
 USER_PASS=$(sed -nr '/USER_PASS=(\d*)/p' .env | cut -d '=' -f 2)
 DB_NAME=$(sed -nr '/DB_NAME=(\d*)/p' .env | cut -d '=' -f 2)
 
+echo -e "\033[1;36m * volumes \033[0m"
+
 docker volume ls
+
+echo -e "\033[1;36m * configuring the database \033[0m"
 
 sudo docker run --rm \
   --name init-mysql \
@@ -200,8 +204,15 @@ sudo docker run --rm \
   docker exec init-mysql sh -c 'echo "$MYSQL_PASSWORD"' && \
   docker exec init-mysql sh -c 'echo "$MYSQL_DATABASE"'
   
+echo -e "\033[1;36m * volumes \033[0m"
 
 docker volume ls
+
+echo -e "\033[1;36m * Preparing backup script \033[0m"
+
+sed -i -r "s/user=.*/user=${USER_NAME}/" ./config/db/backup.sh
+sed -i -r "s/password=.*/password=${USER_PASS}/" ./config/db/backup.sh
+sed -i -r "s/dbName=.*/dbName=${DB_NAME}/" ./config/db/backup.sh
 
 echo -e "\033[1;36m * rebuilding and starting containers \033[0m"
 

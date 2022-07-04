@@ -6,9 +6,9 @@ recipient_email=username@mail.com
 # MySQL user
 user=dev
 # MySQL password
-password=dev123
+password=thisisdev123
 # MySQL database
-dbName=myTest
+dbName=engloset_final_db
 # Number of days to store the backup 
 keep_day=30
 sqlfile=$backupfolder/$dbName-$(date +%d-%m-%Y_%H-%M-%S).sql

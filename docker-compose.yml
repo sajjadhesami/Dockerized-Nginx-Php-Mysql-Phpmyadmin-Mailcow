@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: php.Dockerfile
     image: my_app_image  
-    restart: unless-stopped
+    restart: always
     environment:
       - TZ=${TZ_V}
     volumes:
@@ -29,7 +29,7 @@ services:
       - MYSQL_USER=${USER_NAME}
       - MYSQL_PASSWORD=${USER_PASS}
       - TZ=${TZ_V}
-    restart: unless-stopped
+    restart: always
     cap_add:
       - SYS_NICE
     volumes:
@@ -59,7 +59,7 @@ services:
       dockerfile: nginx.Dockerfile
     image: nginx_image
     container_name: nginx_container
-    restart: unless-stopped
+    restart: always
     ports:
       - "80:80"
       - "443:443"
