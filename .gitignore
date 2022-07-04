@@ -1,4 +1,8 @@
 app_files/
 data/
 mailcow/
+<<<<<<< HEAD
 .env
+=======
+.env
+>>>>>>> 1779a550a49c3b6d260f1fa5f0629799025a26c4
