@@ -1,4 +1,4 @@
 app_files/
-./data/
-./mailcow/
-./.env
+data/
+mailcow/
+.env
