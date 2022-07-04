@@ -6,7 +6,7 @@ recipient_email=username@mail.com
 # MySQL user
 user=dev
 # MySQL password
-password=thisisdev123
+password=dev123
 # MySQL database
 dbName=engloset_final_db
 # Number of days to store the backup 
