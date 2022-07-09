@@ -5,6 +5,10 @@ configENV () {
     read RES        
     echo "TZ_V=${RES}" > .env
     
+    echo -ne "\033[1;36m \t Enter your domain name:  \033[0m"
+    read RES        
+    echo "MY_DOMAIN=${RES}" >> .env
+    
     echo -ne "\033[1;36m \t Enter the number of app replicas that you want:  \033[0m"
     read RES        
     echo "SCALE=${RES}" >> .env
@@ -162,6 +166,9 @@ fi
 
 echo -e "\033[1;36m * Preparing nginx config file \033[0m"
 
+MY_DOMAIN=$(sed -nr '/MY_DOMAIN=(\d*)/p' .env | cut -d '=' -f 2)
+
+
 currentdir="$( basename "$PWD" )"
 currentdir=${currentdir@L}
 str="upstream backend {\n     ip_hash;"
@@ -176,7 +183,19 @@ do
 done
 str+="}"
 
-perl -0pi -e "s#upstream *backend *\{(.|\n|\r)*?\}#$str#gs" ./config/nginx/app.conf
+perl -0pi -e "s#upstream *backend *\{(.|\n|\r)*?\}#$str#gs" ./config/nginx/conf.d/app.conf
+
+
+LINE_NO=$(grep -nP "[^$]server_name" ./config/nginx/conf.d/app.conf | cut -d ':' -f 1 | sed -n 1p)
+sed -i -r "${LINE_NO} s/server_name.*/server_name ${MY_DOMAIN};/" ./config/nginx/conf.d/app.conf
+LINE_NO=$(grep -nP "[^$]server_name" ./config/nginx/conf.d/app.conf | cut -d ':' -f 1 | sed -n 2p)
+sed -i -r "${LINE_NO} s/server_name.*/server_name ${MY_DOMAIN};/" ./config/nginx/conf.d/app.conf
+
+LINE_NO=$(grep -nP "[^$]server_name" ./config/nginx/conf.d/app.conf | cut -d ':' -f 1 | sed -n 3p)
+sed -i -r "${LINE_NO} s/server_name.*/server_name mail.${MY_DOMAIN};/" ./config/nginx/conf.d/app.conf
+LINE_NO=$(grep -nP "[^$]server_name" ./config/nginx/conf.d/app.conf | cut -d ':' -f 1 | sed -n 4p)
+sed -i -r "${LINE_NO} s/server_name.*/server_name mail.${MY_DOMAIN};/" ./config/nginx/conf.d/app.conf
+
 
 echo -e "\033[1;36m * Preparing mysql \033[0m"
 
@@ -184,6 +203,7 @@ ROOT_PASS=$(sed -nr '/ROOT_PASS=(\d*)/p' .env | cut -d '=' -f 2)
 USER_NAME=$(sed -nr '/USER_NAME=(\d*)/p' .env | cut -d '=' -f 2)
 USER_PASS=$(sed -nr '/USER_PASS=(\d*)/p' .env | cut -d '=' -f 2)
 DB_NAME=$(sed -nr '/DB_NAME=(\d*)/p' .env | cut -d '=' -f 2)
+
 
 echo -e "\033[1;36m * volumes \033[0m"
 
@@ -213,6 +233,8 @@ echo -e "\033[1;36m * Preparing backup script \033[0m"
 sed -i -r "s/user=.*/user=${USER_NAME}/" ./config/db/backup.sh
 sed -i -r "s/password=.*/password=${USER_PASS}/" ./config/db/backup.sh
 sed -i -r "s/dbName=.*/dbName=${DB_NAME}/" ./config/db/backup.sh
+
+
 
 echo -e "\033[1;36m * rebuilding and starting containers \033[0m"
 

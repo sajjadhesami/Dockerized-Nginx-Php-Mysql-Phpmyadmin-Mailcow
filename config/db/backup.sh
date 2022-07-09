@@ -8,7 +8,7 @@ user=dev
 # MySQL password
 password=dev123
 # MySQL database
-dbName=engloset_final_db
+dbName=db
 # Number of days to store the backup 
 keep_day=30
 sqlfile=$backupfolder/$dbName-$(date +%d-%m-%Y_%H-%M-%S).sql

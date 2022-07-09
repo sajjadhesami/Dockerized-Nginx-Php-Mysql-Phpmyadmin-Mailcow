@@ -40,15 +40,18 @@ services:
     build: 
       context: .
       dockerfile: phpmyadmin.Dockerfile
+      args:
+        SERVER_NAME_ARG: ${MY_DOMAIN}
     image: image_phpmyadmin
     container_name: phpmyadmin_container    
     restart: always
     environment:
       PMA_HOST: db
-      PMA_ABSOLUTE_URI: https://localhost/phpmyadmin
+      SERVER_NAME: ${MY_DOMAIN}
+      PMA_ABSOLUTE_URI: https://${MY_DOMAIN}/phpmyadmin
       MEMORY_LIMIT: -1
       UPLOAD_LIMIT: 512M
-      MAX_EXECUTION_TIME: 0
+      MAX_EXECUTION_TIME: 0    
     depends_on:
       - db
       - nginx  
