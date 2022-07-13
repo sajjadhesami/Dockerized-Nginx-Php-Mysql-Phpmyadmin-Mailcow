@@ -30,6 +30,5 @@ else
   exit 
 fi
 rm $sqlfile 
-echo $zipfile # | mailx -s 'Backup was successfully created' $recipient_email 
 # Delete old backups 
 find $backupfolder -mtime +$keep_day -delete

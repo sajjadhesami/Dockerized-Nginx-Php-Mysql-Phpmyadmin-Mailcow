@@ -67,7 +67,8 @@ services:
       - TZ=${TZ_V}
     volumes:
       - ./app_files:/var/www
-      - ./config/nginx:/etc/nginx/conf.d
+      - ./data/backups:/var/backups
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
 volumes:
    mysql-data:
     name: mysql-data

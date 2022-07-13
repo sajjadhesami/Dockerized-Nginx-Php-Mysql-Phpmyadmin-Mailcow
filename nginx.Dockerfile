@@ -2,7 +2,7 @@ ARG NGINX_VER=1.22.0
 FROM nginx:${NGINX_VER}-alpine
 
 RUN apk update && \
-    apk add --no-cache vim lynx openssl apache2-utils curl tzdata
+    apk add vim lynx openssl apache2-utils curl tzdata zip unzip
 
 RUN apk add --no-cache --virtual general-dependencies \
     autoconf \
@@ -55,5 +55,13 @@ COPY ./ssl /usr/ssl
 COPY ./config/modsec /etc/nginx/modsec
 RUN cp /opt/ModSecurity/unicode.mapping /etc/nginx/modsec/ && rm /var/log/nginx/*
 
-COPY ./config/nginx/app.conf /etc/nginx/conf.d/app.conf
+COPY ./config/nginx/conf.d/app.conf /etc/nginx/conf.d/app.conf
 COPY ./app_files/ /var/www
+
+ADD ./config/nginx/backup/cron.rule /etc/cron.d/cron.rule
+COPY ./config/nginx/backup/backup.sh /home/backup.sh
+RUN dos2unix /home/backup.sh && dos2unix /etc/cron.d/cron.rule
+
+RUN crontab /etc/cron.d/cron.rule
+
+CMD crond && nginx -g "daemon off;";
